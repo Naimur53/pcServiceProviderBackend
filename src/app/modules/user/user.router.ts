@@ -12,7 +12,7 @@ router.get('/:id', auth(UserRole.admin), UserController.getSingleUser);
 
 router.patch(
   '/:id',
-  auth(UserRole.admin),
+  auth(UserRole.admin, UserRole.customer),
   validateRequest(UserValidation.updateValidation),
   UserController.updateUser
 );

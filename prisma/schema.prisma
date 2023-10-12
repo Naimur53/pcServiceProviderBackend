@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name   String
-  email      String   @unique
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
   password   String
   contactNo  String
   address    String
-  role       UserRole @default(customer)
+  role       UserRole  @default(customer)
   profileImg String
-  bookings Booking[]
-  reviews  Review[]
-  Cart     Cart[]
+  bookings   Booking[]
+  reviews    Review[]
+  Cart       Cart[]
+  Feeback    Feeback[]
 }
 
 enum UserRole {
@@ -28,21 +29,21 @@ enum UserRole {
 }
 
 model Cart {
-  id        String  @id @default(uuid())
-  serviceId String
-  userId    String
-  user      User    @relation(fields: [userId], references: [id])
- pcService   PcService @relation(fields: [serviceId], references: [id])
+  id          String    @id @default(uuid())
+  pcServiceId String
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  pcService   PcService @relation(fields: [pcServiceId], references: [id])
 }
 
 model Review {
-  id        String  @id @default(uuid())
-  userId    String
-  serviceId String
-  rating    Int
-  comment   String
-  user      User    @relation(fields: [userId], references: [id])
-  pcService   PcService @relation(fields: [serviceId], references: [id])
+  id          String    @id @default(uuid())
+  userId      String
+  pcServiceId String
+  rating      Int
+  comment     String
+  user        User      @relation(fields: [userId], references: [id])
+  pcService   PcService @relation(fields: [pcServiceId], references: [id])
 }
 
 model Blog {
@@ -96,8 +97,8 @@ model PcService {
   description  String
   price        Float
   thumbnail    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
   category     ServiceCategory // Use the category enum 
   availability ServiceAvailability
   location     ServiceLocation
@@ -109,20 +110,19 @@ model PcService {
 model Booking {
   id               String        @id @default(uuid())
   userId           String
-  serviceId        String
-  createdDate      DateTime // Time when the booking was created
+  pcServiceId      String
   scheduleDate     DateTime // Date for the scheduled service
   status           BookingStatus
   messageByAdmin   String?
   adjustedSchedule DateTime?
   address          String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
   // Add other booking fields here
   // ...
 
-  user    User    @relation(fields: [userId], references: [id])
-  pcService PcService @relation(fields: [serviceId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  pcService PcService @relation(fields: [pcServiceId], references: [id])
 }
 
 enum BookingStatus {
@@ -132,4 +132,13 @@ enum BookingStatus {
   COMPLETE
   CANCELED
   // Add more status options as needed
+}
+
+model Feeback {
+  id        String   @id @default(uuid())
+  title     String
+  comment   String
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }

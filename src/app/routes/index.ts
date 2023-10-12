@@ -6,6 +6,7 @@ import { ReviewRoutes } from '../modules/review/review.router';
 
 import express from 'express';
 import { AuthRoutes } from '../modules/auth/auth.route';
+import { CartRoutes } from '../modules/cart/cart.router';
 import { ProfileRoutes } from '../modules/profile/profile.router';
 import { UserRoutes } from '../modules/user/user.router';
 const router = express.Router();
@@ -48,6 +49,10 @@ const moduleRoutes = [
   {
     path: '/blog',
     route: BlogRoutes,
+  },
+  {
+    path: '/cart',
+    route: CartRoutes,
   },
 ];
 
