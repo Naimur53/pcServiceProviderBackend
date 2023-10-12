@@ -19,7 +19,7 @@ model User {
   bookings   Booking[]
   reviews    Review[]
   Cart       Cart[]
-  Feeback    Feeback[]
+  Feeback    Feedback[]
 }
 
 enum UserRole {
@@ -134,11 +134,17 @@ enum BookingStatus {
   // Add more status options as needed
 }
 
-model Feeback {
+model Feedback {
   id        String   @id @default(uuid())
   title     String
   comment   String
   userId    String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
+}
+model Faq {
+  id        String      @id @default(uuid())
+  question  String
+  answer    String
+  createdAt DateTime @default(now()) 
 }
