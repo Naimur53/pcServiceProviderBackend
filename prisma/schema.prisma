@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  name   String
+  email      String   @unique
+  password   String
+  contactNo  String
+  address    String
+  role       UserRole @default(customer)
+  profileImg String
+  bookings Booking[]
+  reviews  Review[]
+  Cart     Cart[]
+}
+
+enum UserRole {
+  customer
+  admin
+  superAdmin
+}
+
+model Cart {
+  id        String  @id @default(uuid())
+  serviceId String
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+ pcService   PcService @relation(fields: [serviceId], references: [id])
+}
+
+model Review {
+  id        String  @id @default(uuid())
+  userId    String
+  serviceId String
+  rating    Int
+  comment   String
+  user      User    @relation(fields: [userId], references: [id])
+  pcService   PcService @relation(fields: [serviceId], references: [id])
+}
+
+model Blog {
+  id         String   @id @default(uuid())
+  title      String
+  thumbnails String
+  content    String
+  author     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum ServiceCategory {
+  COMPUTER_TROUBLESHOOTING
+  VIRUS_AND_MALWARE_REMOVAL
+  DATA_RECOVERY
+  NETWORK_SETUP_AND_CONFIGURATION
+  SOFTWARE_INSTALLATION_AND_UPDATES
+  HARDWARE_UPGRADES
+  CUSTOM_PC_BUILDING
+  IT_CONSULTATION
+  SERVER_SETUP_AND_MAINTENANCE
+  DATA_BACKUP_SOLUTIONS
+  REMOTE_IT_SUPPORT
+  IT_SECURITY_AUDITS
+  CLOUD_COMPUTING_SERVICES
+  EMAIL_AND_COMMUNICATION_SYSTEMS
+  HARDWARE_RECYCLING_AND_DISPOSAL
+}
+
+enum ServiceAvailability {
+  TWENTY_FOUR_SEVEN
+  UNAVAILABLE
+  CLOSED_ON_PUBLIC_HOLIDAYS
+}
+
+enum ServiceLocation {
+  DHAKA
+  CHITTAGONG
+  RAJSHAHI
+  KHULNA
+  BARISAL
+  SYLHET
+  RANGPUR
+  ALL_OVER_BANGLADESH
+}
+
+model PcService {
+  id           String              @id @default(uuid())
+  name         String
+  description  String
+  price        Float
+  thumbnail    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  category     ServiceCategory // Use the category enum 
+  availability ServiceAvailability
+  location     ServiceLocation
+  bookings     Booking[]
+  reviews      Review[]
+  Cart         Cart[]
+}
+
+model Booking {
+  id               String        @id @default(uuid())
+  userId           String
+  serviceId        String
+  createdDate      DateTime // Time when the booking was created
+  scheduleDate     DateTime // Date for the scheduled service
+  status           BookingStatus
+  messageByAdmin   String?
+  adjustedSchedule DateTime?
+  address          String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  // Add other booking fields here
+  // ...
+
+  user    User    @relation(fields: [userId], references: [id])
+  pcService PcService @relation(fields: [serviceId], references: [id])
+}
+
+enum BookingStatus {
+  PENDING
+  ACCEPT
+  REJECT
+  COMPLETE
+  CANCELED
+  // Add more status options as needed
+}
