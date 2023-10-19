@@ -46,10 +46,4 @@ Easy PC Backend is a powerful backend system designed to support a multi-role se
 - **Prisma**: A modern database toolkit that simplifies database access.
 - **PostgreSQL**: A powerful open-source relational database management system.
 - **TypeScript**: A statically typed superset of JavaScript for improved code quality.
-
-## Installation and Setup
-
-1. Clone the repository to your local machine.
-2. Install the required dependencies using `npm install`:
-   ```bash
-   npm install
+ 
