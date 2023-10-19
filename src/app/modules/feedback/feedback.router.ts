@@ -6,22 +6,30 @@ import { FeedbackController } from './feedback.controller';
 import { FeedbackValidation } from './feedback.validation';
 const router = express.Router();
 
-router.get('/', auth(UserRole.admin), FeedbackController.getAllFeedback);
-router.get('/:id', auth(UserRole.admin), FeedbackController.getSingleFeedback);
+router.get('/', FeedbackController.getAllFeedback);
+router.get(
+  '/:id',
+  auth(UserRole.admin, UserRole.superAdmin),
+  FeedbackController.getSingleFeedback
+);
 
 router.post(
   '/',
-  auth(UserRole.admin),
+  auth(UserRole.customer),
   validateRequest(FeedbackValidation.createValidation),
   FeedbackController.createFeedback
 );
 
 router.patch(
   '/:id',
-  auth(UserRole.admin),
+  auth(UserRole.admin, UserRole.superAdmin),
   validateRequest(FeedbackValidation.updateValidation),
   FeedbackController.updateFeedback
 );
-router.delete('/:id', auth(UserRole.admin), FeedbackController.deleteFeedback);
+router.delete(
+  '/:id',
+  auth(UserRole.admin, UserRole.superAdmin),
+  FeedbackController.deleteFeedback
+);
 
 export const FeedbackRoutes = router;

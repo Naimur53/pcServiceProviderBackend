@@ -11,7 +11,7 @@ router.get('/:id', auth(UserRole.admin), FaqController.getSingleFaq);
 
 router.post(
   '/',
-  auth(UserRole.admin),
+  auth(UserRole.admin, UserRole.superAdmin),
   validateRequest(FaqValidation.createValidation),
   FaqController.createFaq
 );

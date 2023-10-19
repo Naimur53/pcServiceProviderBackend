@@ -7,7 +7,10 @@ const createValidation = z.object({
   }),
 });
 const updateValidation = z.object({
-  body: z.object({}),
+  body: z.object({
+    title: z.string({ required_error: 'title is required' }).optional(),
+    comment: z.string({ required_error: 'comment is required' }).optional(),
+  }),
 });
 export const FeedbackValidation = {
   createValidation,

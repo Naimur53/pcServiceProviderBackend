@@ -15,7 +15,8 @@ model User {
   contactNo  String
   address    String
   role       UserRole  @default(customer)
-  profileImg String
+  isBlocked   Boolean @default(false)
+  profileImg String?
   bookings   Booking[]
   reviews    Review[]
   Cart       Cart[]
@@ -50,8 +51,7 @@ model Blog {
   id         String   @id @default(uuid())
   title      String
   thumbnails String
-  content    String
-  author     String
+  content    String 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -112,7 +112,7 @@ model Booking {
   userId           String
   pcServiceId      String
   scheduleDate     DateTime // Date for the scheduled service
-  status           BookingStatus
+  status           BookingStatus @default(PENDING)
   messageByAdmin   String?
   adjustedSchedule DateTime?
   address          String

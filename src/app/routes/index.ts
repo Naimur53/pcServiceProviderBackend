@@ -7,6 +7,8 @@ import { ReviewRoutes } from '../modules/review/review.router';
 import express from 'express';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { CartRoutes } from '../modules/cart/cart.router';
+import { FeedbackRoutes } from '../modules/feedback/feedback.router';
+import { fileUploadRoutes } from '../modules/fileUpload/fileUpload.route';
 import { ProfileRoutes } from '../modules/profile/profile.router';
 import { UserRoutes } from '../modules/user/user.router';
 const router = express.Router();
@@ -53,6 +55,14 @@ const moduleRoutes = [
   {
     path: '/cart',
     route: CartRoutes,
+  },
+  {
+    path: '/feedback',
+    route: FeedbackRoutes,
+  },
+  {
+    path: '/uploadImg',
+    route: fileUploadRoutes,
   },
 ];
 

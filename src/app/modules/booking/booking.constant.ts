@@ -1,9 +1,2 @@
-
-        export const bookingSearchableFields = [ 
-          
-        ];
-        export const bookingFilterAbleFields = [
-            
-          ];
-          
-        
+export const bookingSearchableFields = [];
+export const bookingFilterAbleFields = ['status', 'category'];

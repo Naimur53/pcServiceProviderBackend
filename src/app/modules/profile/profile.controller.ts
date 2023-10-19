@@ -8,8 +8,8 @@ import { UserService } from '../user/user.service';
 
 const getProfile: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    const { userId } = req.user as JwtPayload;
-    console.log(userId);
+    const { userId, role } = req.user as JwtPayload;
+    console.log(userId, role);
     const result = await UserService.getSingleUser(userId);
     sendResponse<User>(res, {
       statusCode: httpStatus.OK,

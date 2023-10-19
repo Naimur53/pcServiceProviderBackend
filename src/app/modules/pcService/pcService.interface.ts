@@ -1,5 +1,5 @@
-
-        export type IPcServiceFilters = {
-            searchTerm?: string;
-          }; 
-        
+export type IPcServiceFilters = {
+  searchTerm?: string;
+  maxPrice?: string;
+  minPrice?: string;
+};

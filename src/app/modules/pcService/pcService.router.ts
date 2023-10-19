@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', PcServiceController.getAllPcService);
 router.get(
   '/:id',
-  auth(UserRole.admin, UserRole.superAdmin, UserRole.superAdmin),
+  auth(UserRole.admin, UserRole.superAdmin, UserRole.customer),
   PcServiceController.getSinglePcService
 );
 
@@ -22,13 +22,13 @@ router.post(
 
 router.patch(
   '/:id',
-  auth(UserRole.admin),
+  auth(UserRole.admin, UserRole.superAdmin),
   validateRequest(PcServiceValidation.updateValidation),
   PcServiceController.updatePcService
 );
 router.delete(
   '/:id',
-  auth(UserRole.admin),
+  auth(UserRole.admin, UserRole.superAdmin),
   PcServiceController.deletePcService
 );
 

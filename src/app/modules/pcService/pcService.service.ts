@@ -15,7 +15,7 @@ const getAllPcService = async (
   const { page, limit, skip } =
     paginationHelpers.calculatePagination(paginationOptions);
 
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, maxPrice, minPrice, ...filterData } = filters;
 
   const andCondition = [];
 
@@ -33,6 +33,20 @@ const getAllPcService = async (
       OR: searchAbleFields,
     });
   }
+  if (maxPrice) {
+    andCondition.push({
+      price: {
+        lte: Number(maxPrice),
+      },
+    });
+  }
+  if (minPrice) {
+    andCondition.push({
+      price: {
+        gte: Number(minPrice),
+      },
+    });
+  }
   if (Object.keys(filters).length) {
     andCondition.push({
       AND: Object.keys(filterData).map(key => ({
@@ -45,7 +59,6 @@ const getAllPcService = async (
 
   const whereConditions: Prisma.PcServiceWhereInput =
     andCondition.length > 0 ? { AND: andCondition } : {};
-
   const result = await prisma.pcService.findMany({
     where: whereConditions,
     skip,
@@ -58,6 +71,13 @@ const getAllPcService = async (
         : {
             createdAt: 'desc',
           },
+    include: {
+      reviews: {
+        select: {
+          rating: true,
+        },
+      },
+    },
   });
   const total = await prisma.pcService.count();
   const output = {
@@ -80,6 +100,17 @@ const getSinglePcService = async (id: string): Promise<PcService | null> => {
   const result = await prisma.pcService.findUnique({
     where: {
       id,
+    },
+    include: {
+      reviews: {
+        select: {
+          comment: true,
+          rating: true,
+          userId: true,
+          id: true,
+          user: true,
+        },
+      },
     },
   });
   return result;

@@ -6,7 +6,11 @@ import { BookingController } from './booking.controller';
 import { BookingValidation } from './booking.validation';
 const router = express.Router();
 
-router.get('/', auth(UserRole.admin), BookingController.getAllBooking);
+router.get(
+  '/',
+  auth(UserRole.admin, UserRole.superAdmin),
+  BookingController.getAllBooking
+);
 router.get(
   '/:id',
   auth(UserRole.customer, UserRole.admin),
@@ -33,8 +37,7 @@ router.patch(
 );
 router.delete(
   '/:id',
-  auth(UserRole.customer, UserRole.admin),
-  auth(UserRole.admin),
+  auth(UserRole.customer, UserRole.admin, UserRole.superAdmin),
   BookingController.deleteBooking
 );
 

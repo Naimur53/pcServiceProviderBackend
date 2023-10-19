@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import { Request, Response } from 'express';
 import { RequestHandler } from 'express-serve-static-core';
 import httpStatus from 'http-status';
@@ -22,11 +21,11 @@ const createUser: RequestHandler = catchAsync(
     };
 
     res.cookie('refreshToken', refreshToken, cookieOptions);
-    sendResponse<Omit<User, 'password'>>(res, {
+    sendResponse<ILoginResponse>(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'user created successfully!',
-      data: result.user,
+      data: result,
     });
   }
 );

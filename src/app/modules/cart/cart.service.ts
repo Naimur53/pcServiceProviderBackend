@@ -10,6 +10,16 @@ const getAllCart = async (): Promise<Cart[]> => {
 };
 const createCart = async (payload: Cart): Promise<Cart | null> => {
   await userAndPcServiceChecker(payload.userId, payload.pcServiceId);
+
+  // check does it already exits
+  const isExits = await prisma.cart.findFirst({
+    where: {
+      pcServiceId: payload.pcServiceId,
+    },
+  });
+  if (isExits) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Cart Already exits');
+  }
   const newCart = await prisma.cart.create({
     data: payload,
   });
@@ -28,6 +38,18 @@ const getSingleUserAllCart = async (userId: string): Promise<Cart[] | null> => {
   const result = await prisma.cart.findMany({
     where: {
       userId: userId,
+    },
+    include: {
+      pcService: {
+        select: {
+          name: true,
+          location: true,
+          price: true,
+          thumbnail: true,
+          id: true,
+          category: true,
+        },
+      },
     },
   });
   return result;

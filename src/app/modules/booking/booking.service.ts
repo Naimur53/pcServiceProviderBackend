@@ -13,6 +13,7 @@ const getAllBooking = async (
   filters: IBookingFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Booking[]>> => {
+  console.log(paginationOptions);
   const { page, limit, skip } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -59,6 +60,27 @@ const getAllBooking = async (
         : {
             createdAt: 'desc',
           },
+    include: {
+      pcService: {
+        select: {
+          name: true,
+          location: true,
+          price: true,
+          thumbnail: true,
+          id: true,
+          category: true,
+        },
+      },
+      user: {
+        select: {
+          email: true,
+          name: true,
+          profileImg: true,
+          address: true,
+          id: true,
+        },
+      },
+    },
   });
   const total = await prisma.booking.count();
   const output = {
@@ -70,10 +92,19 @@ const getAllBooking = async (
 
 const createBooking = async (payload: Booking): Promise<Booking | null> => {
   await userAndPcServiceChecker(payload.userId, payload.pcServiceId);
-  const newBooking = await prisma.booking.create({
-    data: payload,
+
+  const result = await prisma.$transaction(async tx => {
+    const removeAllCartForThisUser = await tx.cart.deleteMany({
+      where: {
+        userId: payload.userId,
+        pcServiceId: payload.pcServiceId,
+      },
+    });
+    return await tx.booking.create({
+      data: payload,
+    });
   });
-  return newBooking;
+  return result;
 };
 
 const getSingleBooking = async (id: string): Promise<Booking | null> => {
@@ -93,6 +124,15 @@ const getSingleUserAllBooking = async (
   const result = await prisma.booking.findMany({
     where: {
       userId,
+    },
+    include: {
+      pcService: {
+        select: {
+          name: true,
+          price: true,
+          thumbnail: true,
+        },
+      },
     },
   });
   return result;

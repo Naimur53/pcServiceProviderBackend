@@ -2,8 +2,11 @@ import { Feedback } from '@prisma/client';
 import { Request, Response } from 'express';
 import { RequestHandler } from 'express-serve-static-core';
 import httpStatus from 'http-status';
+import { paginationFields } from '../../../constants/pagination';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
+import { feedbackFilterAbleFields } from './feedback.constant';
 import { FeedbackService } from './feedback.service';
 const createFeedback: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
@@ -23,12 +26,20 @@ const createFeedback: RequestHandler = catchAsync(
 );
 
 const getAllFeedback = catchAsync(async (req: Request, res: Response) => {
-  const result = await FeedbackService.getAllFeedback();
+  const filters = pick(req.query, ['searchTerm', ...feedbackFilterAbleFields]);
+  const paginationOptions = pick(req.query, paginationFields);
+
+  const result = await FeedbackService.getAllFeedback(
+    filters,
+    paginationOptions
+  );
+
   sendResponse<Feedback[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Feedback retrieved successfully !',
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 
