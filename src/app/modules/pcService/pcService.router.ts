@@ -7,12 +7,16 @@ import { PcServiceValidation } from './pcService.validation';
 const router = express.Router();
 
 router.get('/', PcServiceController.getAllPcService);
+
+router.get(
+  '/allCategoryOfPcService',
+  PcServiceController.allCategoryOfPcService
+);
 router.get(
   '/:id',
   auth(UserRole.admin, UserRole.superAdmin, UserRole.customer),
   PcServiceController.getSinglePcService
 );
-
 router.post(
   '/',
   auth(UserRole.admin, UserRole.superAdmin),

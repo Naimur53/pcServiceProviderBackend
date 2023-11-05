@@ -91,6 +91,17 @@ const deletePcService: RequestHandler = catchAsync(
     });
   }
 );
+const allCategoryOfPcService: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await PcServiceService.allCategoryOfPcService();
+    sendResponse<any>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'PcService deleted successfully!',
+      data: result,
+    });
+  }
+);
 
 export const PcServiceController = {
   getAllPcService,
@@ -98,4 +109,5 @@ export const PcServiceController = {
   updatePcService,
   getSinglePcService,
   deletePcService,
+  allCategoryOfPcService,
 };

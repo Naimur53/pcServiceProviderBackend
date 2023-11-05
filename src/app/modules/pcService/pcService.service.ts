@@ -138,6 +138,23 @@ const deletePcService = async (id: string): Promise<PcService | null> => {
   }
   return result;
 };
+const allCategoryOfPcService = async (): Promise<any> => {
+  const result = await prisma.pcService.groupBy({
+    by: ['category'],
+    _count: {
+      _all: true,
+    },
+    _min: {
+      price: true,
+      thumbnail: true,
+    },
+    take: 9,
+    orderBy: {
+      category: 'asc',
+    },
+  });
+  return result;
+};
 
 export const PcServiceService = {
   getAllPcService,
@@ -145,4 +162,5 @@ export const PcServiceService = {
   updatePcService,
   getSinglePcService,
   deletePcService,
+  allCategoryOfPcService,
 };
