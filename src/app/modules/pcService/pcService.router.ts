@@ -35,5 +35,10 @@ router.delete(
   auth(UserRole.admin, UserRole.superAdmin),
   PcServiceController.deletePcService
 );
+router.get(
+  '/dashboard/overview',
+  // auth(UserRole.admin, UserRole.superAdmin),
+  PcServiceController.overview
+);
 
 export const PcServiceRoutes = router;

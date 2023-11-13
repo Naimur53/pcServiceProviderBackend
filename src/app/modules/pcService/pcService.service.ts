@@ -155,6 +155,77 @@ const allCategoryOfPcService = async (): Promise<any> => {
   });
   return result;
 };
+const overview = async (): Promise<any> => {
+  /**
+    step 1: order number only->
+            pending order,
+            confirm order,
+            cancel order,
+    step 2: category order status
+            show all category orders info like one category has been order 4 time,
+    step 3: user activity on order 
+            total user,
+            total reviews, 
+            total feed back,
+            total added cart items
+    step 4: cart activity overview,
+            show cart activity of users with graph cart like,  
+   */
+
+  // step 1
+  const bookingStatusP = prisma.booking.groupBy({
+    by: ['status'],
+    _count: true,
+  });
+
+  // step 2
+  const categoryStatusP = prisma.$queryRaw`SELECT "pcServiceId", "name", COUNT(*)::integer as count FROM (
+    SELECT "pcServiceId", "name", "userId" FROM "PcService" INNER JOIN "Booking" ON "PcService".id = "Booking"."pcServiceId"
+  ) as SubqueryAlias GROUP BY "pcServiceId", "name"`;
+
+  // step 3
+  const totalUserP = prisma.user.count();
+  const totalFeedbackP = prisma.feedback.count();
+  const totalReviewsP = prisma.review.count();
+  const totalCartsP = prisma.cart.count();
+  // step 4
+  const totalBlogP = prisma.blog.count();
+  const totalFaqP = prisma.faq.count();
+  const totalServiceP = prisma.pcService.count();
+
+  const [
+    bookingStatus,
+    categoryStatus,
+    totalUser,
+    totalFeedback,
+    totalReviews,
+    totalCarts,
+    totalBlog,
+    totalFaq,
+    totalService,
+  ] = await Promise.all([
+    bookingStatusP,
+    categoryStatusP,
+    totalUserP,
+    totalFeedbackP,
+    totalReviewsP,
+    totalCartsP,
+    totalBlogP,
+    totalFaqP,
+    totalServiceP,
+  ]);
+  return {
+    bookingStatus,
+    categoryStatus,
+    totalUser,
+    totalFeedback,
+    totalReviews,
+    totalCarts,
+    totalBlog,
+    totalFaq,
+    totalService,
+  };
+};
 
 export const PcServiceService = {
   getAllPcService,
@@ -163,4 +234,5 @@ export const PcServiceService = {
   getSinglePcService,
   deletePcService,
   allCategoryOfPcService,
+  overview,
 };

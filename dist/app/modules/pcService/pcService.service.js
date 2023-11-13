@@ -140,10 +140,28 @@ const deletePcService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return result;
 });
+const allCategoryOfPcService = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.pcService.groupBy({
+        by: ['category'],
+        _count: {
+            _all: true,
+        },
+        _min: {
+            price: true,
+            thumbnail: true,
+        },
+        take: 9,
+        orderBy: {
+            category: 'asc',
+        },
+    });
+    return result;
+});
 exports.PcServiceService = {
     getAllPcService,
     createPcService,
     updatePcService,
     getSinglePcService,
     deletePcService,
+    allCategoryOfPcService,
 };
