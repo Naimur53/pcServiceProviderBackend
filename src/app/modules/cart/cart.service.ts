@@ -15,6 +15,7 @@ const createCart = async (payload: Cart): Promise<Cart | null> => {
   const isExits = await prisma.cart.findFirst({
     where: {
       pcServiceId: payload.pcServiceId,
+      userId:payload.userId
     },
   });
   if (isExits) {
